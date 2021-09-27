@@ -3,59 +3,42 @@ import ItemForm from "./ItemForm";
 import Filter from "./Filter";
 import Item from "./Item";
 
-function ShoppingList({ items }) {
+function ShoppingList({ items, handleAddItem }) {
   const [selectedCategory, setSelectedCategory] = useState("All");
   // const [searchCategory, setSearchCategory] = useState("")
-  const [itemList, setItemList] = useState(items)
-
-  
+ const [searchItem, setSearchItem] = useState("")
 
   function handleCategoryChange(event) {
-    setSelectedCategory(event.target.value);
+    setSelectedCategory(event.target.value, true);
+    // console.log('category change', event.target.value)
   }
 
-  // function handleSearchChange(event) {
-  //   setSearchCategory(event.target.value)
-  // }
-  const itemsToDisplay = items.filter((item) => {
-    if (selectedCategory === "All") {
-      return true
-    } else if (selectedCategory === ""){
-      return true
+  function handleSearch(event){
+    setSearchItem(event.target.value)
+  }
+
+///////////////////////////////////////
+
+
+  const displayFilter = items.filter((item) => {
+    
+    if (item.name.toLowerCase().includes(searchItem.toLowerCase())){
+        return(item) }
+  else {
+      return item.category === selectedCategory
     }
-    return item.category === selectedCategory
   
   });
 
-  // const searchItemsDisplay = items.filter((item) => {
-  //   if (searchCategory === null){
-  //     return true
-  //   }
-  //   return item.category === searchCategory
-  // })
+  let displayItems = selectedCategory!=="All" || searchItem!=="testing"? displayFilter : items
 
-  // const itemsToDisplay = () => {
-  //   if (onCategoryChange()){
-  //     return categoryToDisplay
-  //   } else if (onSearchChange){
-  //     return searchItemsDisplay
-  //   }
-  // }
-  
-  //how to get either case to be rendered in map?????
-
-  function handleAddItem(item){
-    setItemList([...itemList, item])
-
-  }
-  
-
+  ///////////////////////////////////////
   return (
     <div className="ShoppingList">
       <ItemForm onItemFormSubmit={handleAddItem}/>
-      <Filter onCategoryChange={handleCategoryChange} />
+      <Filter search={searchItem} onDropdownChange={handleCategoryChange} onSearchChange={handleSearch}/>
       <ul className="Items">
-        {itemsToDisplay.map((item) => (
+        {displayItems.map((item) => (
           <Item key={item.id} name={item.name} category={item.category} />
         ))}
       </ul>
