@@ -2,14 +2,15 @@ import React from "react";
 import { v4 as uuid } from "uuid";
 import { useState } from "react"
 
-function ItemForm(props) {
+function ItemForm({onItemFormSubmit}) {
+
+  // console.log(onItemFormSubmit)
 
 const [formData, setFormData] = useState({
   id: uuid(), 
   name: "", 
   category: "Produce",
 })
-
 
   function handleChange(event) {
     console.log(event.target.value)
@@ -21,15 +22,14 @@ const [formData, setFormData] = useState({
   }
 
   function handleSubmit(event){
+    // console.log(event)
     event.preventDefault()
-    console.log(formData)
+    onItemFormSubmit(formData)
   }
-
-  
-  
-  
+ 
   return (
-    <form className="NewItem">
+    <form className="NewItem" onSubmit={
+      handleSubmit}>
       <label>
         Name:
         <input 
@@ -54,8 +54,7 @@ const [formData, setFormData] = useState({
       </label>
 
       <button 
-        type="submit" 
-        onSubmit={handleSubmit}>Add to List</button>
+        type="submit">Add to List</button>
     </form>
   );
 }
